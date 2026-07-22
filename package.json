@@ -1,0 +1,56 @@
+{
+  "name": "buildlog",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Full-stack TypeScript portfolio application",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "dev": "concurrently -k -n API,WEB \"npm run dev --workspace=@buildlog/api\" \"npm run dev --workspace=@buildlog/web\"",
+    "build": "npm run build --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "node --env-file=.env ./node_modules/vitest/vitest.mjs run",
+    "test:watch": "node --env-file=.env ./node_modules/vitest/vitest.mjs",
+    "test:unit": "npm run test:unit --workspaces --if-present",
+    "test:integration": "npm run test:integration --workspace=@buildlog/api",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "db:up": "docker compose up -d db",
+    "db:down": "docker compose down -v",
+    "db:stop": "docker compose stop db",
+    "db:reset": "docker compose down -v && docker compose up -d db",
+    "db:logs": "docker compose logs -f db",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:deploy": "prisma migrate deploy",
+    "db:seed": "tsx prisma/seed.ts",
+    "db:studio": "prisma studio",
+    "docker:up": "docker compose up --build",
+    "docker:down": "docker compose down",
+    "check": "npm run format:check && npm run lint && npm run typecheck && npm run test && npm run build",
+    "ci": "npm run format:check && npm run lint && npm run typecheck && npm run test && npm run build"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.61.1",
+    "@types/node": "^24.13.3",
+    "concurrently": "^9.0.0",
+    "prettier": "^3.0.0",
+    "prisma": "^7.9.0",
+    "tsx": "^4.0.0",
+    "typescript": "~6.0.2",
+    "vitest": "^4.1.10"
+  },
+  "allowScripts": {
+    "@prisma/engines@7.9.0": true,
+    "esbuild@0.28.1": true,
+    "prisma@7.9.0": true
+  }
+}
